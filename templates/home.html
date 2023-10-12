@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="{% static 'img/indir.ico' %}" type="image/ico">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    <script src="{% static 'functions.js' %}"></script>
+    <script src="{% static 'bootstrap/js/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <title>Düzelt Beni</title>
+</head>
+<body>
+
+<div class="container d-grid gap-3">
+    <!-- HEADER -->
+    <center>
+        <div class="underlined">
+            <h1>
+                <center>Düzelt Beni</center>
+            </h1>
+        </div>
+    </center>
+    <div class="row px-3">
+        <form action="{% url 'send_data' %}" method="POST">
+            {% csrf_token %}
+            <div class="row d-grip gap-2">
+                <div class="row py-2 my-3">
+                    <div class="col-lg-6">
+                        <label class="form-label" for="inputText">Girdi</label>
+                        <textarea
+                                id="inputText"
+                                name="input"
+                                class="form-control"
+                                placeholder="Enter text..."
+                                spellcheck="false"
+                                rows="10"
+                                cols="80">{% if input %}{{ input }}{% endif %}</textarea>
+                        <input type="hidden" name="dataType" value="{{ "sendtext" }}">
+                        <br/>
+
+                        <button type="submit" class="btn btn-primary float-end" onclick="visibleFunction()">
+                            Yanlışları Bul
+                        </button>
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="output-label-and-copy-text-button">
+                            <label class="form-label">Çıktı</label>
+
+                            <button type="button" class="CopyText" onclick="copyDivToClipboard()">Metni Kopyala
+                            </button>
+                        </div>
+                        <div class="output-container border-top py-2" id="copy">
+                            {% if output %}{{ output|safe }}{% endif %}</div>
+
+                        <br/>
+                    </div>
+                </div>
+
+            </div>
+            <script src="{% static 'js/script.js' %}"></script>
+        </form>
+    </div>
+    <form method="post" action="{% url 'send_data' %}">
+        {% csrf_token %}
+        <button type="button" id="show-id" onclick="openPopup()" class="StillWrong" role="button">Bu Hala
+            Hatalı!
+        </button>
+        <div class="popup" id="popup">
+                <textarea type="text" placeholder="Lütfen Yanlış Olan Cümlenin Doğrusunu Girin" id="feedback"
+                          name="feedback" class="feedback" rows="11" cols="18"></textarea>
+            <input type="hidden" name="dataType" value="{{ "sendapi" }}">
+            <div class="button-container">
+                <button type="button" class=SaveButtonStillWrong id="save" style="display: none"
+                        onclick="closePopup()">Kaydet
+                </button>
+            </div>
+        </div>
+    </form>
+    <form method="post" action="{% url 'send_data' %}">
+        {% csrf_token %}
+        <!-- GERİ BİLDİRİM VERMEK İSTER MİSİN? BUTTON -->
+        <button type="button" class="Feedback" onclick="opengPopup()"><span>Geri Bildirim Vermek İster Misin?</span>
+        </button>
+        <!-- GERİ BİLDİRİM VERMEK İSTER MİSİN? POPUP -->
+        <center>
+            <div class="gpopup" id="gpopup">
+                <textarea type="text" placeholder="Geri Bildiriminizi Girin" id="gfeedback" name="gfeedback"
+                          class="gfeedback" rows="11" cols="18">{{ gfeedback }}</textarea>
+                <input type="hidden" name="dataType" value="{{ "sendfeedback" }}">
+                <div class="button-container">
+                    <button type="button" class=SaveButton id="saveg" style="display: none" onclick="closegPopup()">
+                        Kaydet
+                    </button>
+                </div>
+            </div>
+        </center>
+    </form>
+
+
+    <script>
+        let popup = document.getElementById("popup");
+        let gpopup = document.getElementById("gpopup");
+        let save = document.getElementById("save");
+        let saveg = document.getElementById("saveg");
+        let exit = document.getElementById("exit");
+        let exitg = document.getElementById("exitg");
+
+        let feedbackForm = document.getElementById("feedback-form");
+
+        function openPopup() {
+            popup.classList.add("open-popup");
+            save.style.display = "block";
+            exit.style.display = "block";
+            saveg.style.display = "none";
+            exitg.style.display = "none";
+            gpopup.classList.remove("open-g-popup");
+        }
+
+        function closePopup() {
+            popup.classList.remove("open-popup");
+        }
+
+        function opengPopup() {
+            gpopup.classList.add("open-g-popup");
+            saveg.style.display = "block";
+            exitg.style.display = "block";
+            save.style.display = "none";
+            exit.style.display = "none";
+            popup.classList.remove("open-popup");
+        }
+
+        function closegPopup() {
+            gpopup.classList.remove("open-g-popup");
+
+        }
+    </script>
+</div>
+</body>
+</html>
